@@ -64,5 +64,11 @@
       "url": "./",
       "icons": [{ "src": "assets/icons/icon-512x512.png", "sizes": "512x512" }]
     }
-  ]
+  ],
+  "file_handlers": [{
+    "action": "/index.html",
+    "accept": {
+      "image/png": [".png"]
+    }
+  }]
 }
