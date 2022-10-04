@@ -57,6 +57,7 @@ export class AppComponent implements AfterViewInit {
 
   onColorChange(color: HTMLInputElement) {
     // LAB #6
+    this.context!.fillStyle = color.value;
   }
 
   async open() {
