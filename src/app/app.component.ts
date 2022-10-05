@@ -8,6 +8,7 @@ import { PaintService } from "./paint.service";
 })
 export class AppComponent implements AfterViewInit {
   // LAB #1
+  @ViewChild('canvas') canvas?: ElementRef<HTMLCanvasElement>;
   // LAB #2.1
   // LAB #5
   // LAB #11
