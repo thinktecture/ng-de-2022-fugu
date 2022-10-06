@@ -38,11 +38,11 @@ export class AppComponent implements AfterViewInit {
   }
 
   async open() {
-    // LAB #12
+    // LAB #12, 18
   }
 
   async save() {
-    // LAB #11
+    // LAB #11, 18
   }
 
   async copy() {
