@@ -22,8 +22,6 @@ export class AppComponent implements AfterViewInit {
   };
   // LAB #17
   readonly supported = {
-    open: 'showOpenFilePicker' in window,
-    save: 'showSaveFilePicker' in window,
     copy: navigator.clipboard && 'write' in navigator.clipboard,
     paste: navigator.clipboard && 'read' in navigator.clipboard,
     share: 'canShare' in navigator,
@@ -85,19 +83,39 @@ export class AppComponent implements AfterViewInit {
 
   async open() {
     // LAB #12, 18
-    const [handle] = await window.showOpenFilePicker(this.fileOptions);
-    const file = await handle.getFile();
-    const image = await this.paintService.getImage(file);
-    this.context!.drawImage(image, 0, 0);
+    if ('showOpenFilePicker' in window) {
+      const [handle] = await window.showOpenFilePicker(this.fileOptions);
+      const file = await handle.getFile();
+      const image = await this.paintService.getImage(file);
+      this.context!.drawImage(image, 0, 0);
+    } else {
+      const file = await new Promise<Blob>(res => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.addEventListener('change', () => res(input.files![0]));
+        input.click();
+      });
+      const image = await this.paintService.getImage(file);
+      this.context!.drawImage(image, 0, 0);
+    }
   }
 
   async save() {
     // LAB #11, 18
     const blob = await this.paintService.toBlob(this.canvas!.nativeElement);
-    const handle = await window.showSaveFilePicker(this.fileOptions);
-    const writable = await handle.createWritable();
-    await writable.write(blob);
-    await writable.close();
+    if ('showSaveFilePicker' in window) {
+      const handle = await window.showSaveFilePicker(this.fileOptions);
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+    } else {
+      const anchor = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      anchor.href = url;
+      anchor.download = '';
+      anchor.click();
+      URL.revokeObjectURL(url);
+    }
   }
 
   async copy() {
